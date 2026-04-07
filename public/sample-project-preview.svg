@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" fill="none">
+  <defs>
+    <linearGradient id="bg" x1="160" y1="40" x2="1050" y2="840" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#1F2A44"/>
+      <stop offset="0.5" stop-color="#274D63"/>
+      <stop offset="1" stop-color="#E38B5B"/>
+    </linearGradient>
+    <linearGradient id="panel" x1="280" y1="180" x2="960" y2="720" gradientUnits="userSpaceOnUse">
+      <stop stop-color="rgba(255,255,255,0.8)"/>
+      <stop offset="1" stop-color="rgba(255,255,255,0.16)"/>
+    </linearGradient>
+    <linearGradient id="line" x1="320" y1="240" x2="860" y2="620" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#9EE7D7"/>
+      <stop offset="1" stop-color="#F6D58A"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="900" rx="56" fill="url(#bg)"/>
+  <circle cx="210" cy="170" r="110" fill="#F8D5B8" fill-opacity=".18"/>
+  <circle cx="1000" cy="760" r="180" fill="#0F1A2E" fill-opacity=".25"/>
+  <rect x="132" y="118" width="936" height="664" rx="36" fill="url(#panel)" stroke="rgba(255,255,255,0.22)" stroke-width="4"/>
+  <rect x="188" y="184" width="320" height="22" rx="11" fill="#F2F1ED" fill-opacity=".92"/>
+  <rect x="188" y="230" width="206" height="16" rx="8" fill="#DBE4EC" fill-opacity=".72"/>
+  <rect x="188" y="300" width="824" height="238" rx="28" fill="#111B31" fill-opacity=".48" stroke="rgba(255,255,255,0.14)" stroke-width="3"/>
+  <path d="M240 500C328 410 410 450 488 396C572 338 638 308 722 336C798 362 870 458 960 378" stroke="url(#line)" stroke-width="16" stroke-linecap="round"/>
+  <circle cx="240" cy="500" r="16" fill="#FFF6DC"/>
+  <circle cx="488" cy="396" r="16" fill="#FFF6DC"/>
+  <circle cx="722" cy="336" r="16" fill="#FFF6DC"/>
+  <circle cx="960" cy="378" r="16" fill="#FFF6DC"/>
+  <rect x="188" y="594" width="256" height="132" rx="24" fill="#E9E2D6" fill-opacity=".18" stroke="rgba(255,255,255,0.16)" stroke-width="3"/>
+  <rect x="472" y="594" width="256" height="132" rx="24" fill="#E9E2D6" fill-opacity=".12" stroke="rgba(255,255,255,0.16)" stroke-width="3"/>
+  <rect x="756" y="594" width="256" height="132" rx="24" fill="#E9E2D6" fill-opacity=".08" stroke="rgba(255,255,255,0.16)" stroke-width="3"/>
+  <text x="188" y="122" fill="#FFF8EA" font-family="Segoe UI, Arial, sans-serif" font-size="54" font-weight="700">
+    Sample Project Preview
+  </text>
+  <text x="188" y="282" fill="#FFF8EA" fill-opacity=".78" font-family="Segoe UI, Arial, sans-serif" font-size="30">
+    Replace this with your real project screenshot later.
+  </text>
+</svg>
