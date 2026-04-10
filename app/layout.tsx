@@ -1,18 +1,38 @@
 import type { Metadata } from "next";
+import { Inter, Space_Grotesk } from "next/font/google";
 import "./globals.css";
 
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-inter",
+  display: "swap",
+});
+
+const spaceGrotesk = Space_Grotesk({
+  subsets: ["latin"],
+  variable: "--font-space",
+  display: "swap",
+});
+
 export const metadata: Metadata = {
-  title: "Josen | Interactive Portfolio Experience",
+  title: "Josen Raju | Software Engineer",
   description:
-    "A design-led portfolio experience built with Next.js, React Three Fiber, and cinematic UI motion.",
+    "Portfolio of Josen Raju — Software Engineer building scalable systems and crafting digital experiences. Explore my projects, skills, and professional journey.",
   keywords: [
+    "Josen Raju",
+    "software engineer",
+    "full stack developer",
     "portfolio",
-    "interactive portfolio",
-    "creative developer",
-    "full-stack developer",
+    "web developer",
+    "React",
     "Next.js",
-    "React Three Fiber",
+    "TypeScript",
   ],
+  openGraph: {
+    title: "Josen Raju | Software Engineer",
+    description: "Building Scalable Systems & Crafting Digital Experiences",
+    type: "website",
+  },
 };
 
 export default function RootLayout({
@@ -21,8 +41,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="h-full antialiased" suppressHydrationWarning>
-      <body className="min-h-full">{children}</body>
+    <html lang="en" className={`${inter.variable} ${spaceGrotesk.variable}`}>
+      <body>{children}</body>
     </html>
   );
 }
