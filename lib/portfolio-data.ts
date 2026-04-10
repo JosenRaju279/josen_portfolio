@@ -1,126 +1,212 @@
-export type SectionId = "projects" | "skills" | "about" | "contact";
-
-export type ThemeMode = "dark" | "light";
-
 export type Project = {
+  id: string;
   title: string;
   summary: string;
+  description: string;
   stack: string[];
   href: string;
-  type: string;
   image: string;
+  category: string;
 };
 
 export type Skill = {
-  label: string;
-  value: number;
+  name: string;
+  icon: string;
+  category: "frontend" | "backend" | "devops" | "tools";
 };
 
-export const sectionOrder: SectionId[] = [
-  "projects",
-  "skills",
-  "about",
-  "contact",
+export type TimelineEntry = {
+  id: string;
+  date: string;
+  role: string;
+  company: string;
+  description: string;
+  highlights: string[];
+};
+
+export type NavItem = {
+  label: string;
+  href: string;
+};
+
+export type Social = {
+  label: string;
+  href: string;
+  icon: string;
+};
+
+export const navItems: NavItem[] = [
+  { label: "Home", href: "#hero" },
+  { label: "About", href: "#about" },
+  { label: "Skills", href: "#skills" },
+  { label: "Projects", href: "#projects" },
+  { label: "Experience", href: "#experience" },
+  { label: "Contact", href: "#contact" },
 ];
 
-export const sectionCopy: Record<
-  SectionId,
-  {
-    eyebrow: string;
-    title: string;
-    description: string;
-  }
-> = {
-  projects: {
-    eyebrow: "Selected Work",
-    title: "Projects",
-    description:
-      "Featured builds shaped around storytelling, motion, and frontend craft.",
-  },
-  skills: {
-    eyebrow: "Core Stack",
-    title: "Skills",
-    description:
-      "A blend of creative interface thinking and practical engineering depth.",
-  },
-  about: {
-    eyebrow: "Profile",
-    title: "About Me",
-    description:
-      "The thinking, design taste, and working style behind the visuals.",
-  },
-  contact: {
-    eyebrow: "Start a Project",
-    title: "Contact",
-    description:
-      "A direct line for new products, redesigns, and collaboration briefs.",
+export const heroData = {
+  greeting: "Hello, I'm",
+  name: "Josen Raju",
+  title: "Software Engineer",
+  subtitle: "Building Scalable Systems & Crafting Digital Experiences",
+  description:
+    "I design and build high-performance applications that solve real-world problems. Passionate about clean architecture, intuitive interfaces, and pushing the boundaries of what's possible on the web.",
+  cta: {
+    primary: { label: "View My Work", href: "#projects" },
+    secondary: { label: "Contact Me", href: "#contact" },
   },
 };
 
-export const portfolioData = {
-  hero: {
-    name: "Josen Raju",
-    role: "Full-Stack Developer",
-    blurb:
-      "I design and build polished web experiences with strong visual direction, thoughtful motion, and production-ready frontend systems.",
-    status: "Available for freelance and product collaborations",
-    location: "Based in India, building for global teams",
-    ctaLabel: "Open contact panel",
-  },
-  projects: [
-    {
-      type: "Portfolio Experience",
-      title: "Immersive Portfolio Room",
-      summary:
-        "A cinematic 3D portfolio built around room-scale storytelling, guided camera movement, and tactile interface details.",
-      stack: ["Next.js", "React Three Fiber", "Drei", "Framer Motion"],
-      href: "#",
-      image: "/sample-project-preview.svg",
-    },
-    {
-      type: "Showcase Platform",
-      title: "Interior Showcase Experience",
-      summary:
-        "A stylized product showcase where editorial layout, spatial composition, and interaction design work as one system.",
-      stack: ["Three.js", "TypeScript", "Tailwind CSS"],
-      href: "#",
-      image: "/sample-project-preview.svg",
-    },
-    {
-      type: "Design Engineering",
-      title: "Creative Frontend Systems",
-      summary:
-        "Interface work that blends visual craft, animation direction, and maintainable frontend architecture.",
-      stack: ["React", "Motion", "UI Systems"],
-      href: "#",
-      image: "/sample-project-preview.svg",
-    },
-  ] satisfies Project[],
-  skills: [
-    { label: "Creative Frontend Development", value: 95 },
-    { label: "Interface Systems and UI Architecture", value: 91 },
-    { label: "Motion Design for the Web", value: 92 },
-    { label: "Three.js / React Three Fiber", value: 88 },
-    { label: "Performance and Product Polish", value: 89 },
-  ] satisfies Skill[],
-  about: [
-    "I care about interfaces that feel intentional from the first second: clean hierarchy, strong motion language, and details that reward attention.",
-    "My work sits between product engineering and visual storytelling, which means I think about performance, maintainability, and emotional impact at the same time.",
-    "Whether the brief is a portfolio, marketing site, or product surface, I aim for experiences that feel sharp, modern, and genuinely memorable.",
+export const aboutData = {
+  headline: "About Me",
+  paragraphs: [
+    "I'm a software engineer with a passion for building products that make a difference. My journey in tech started with curiosity and evolved into a deep commitment to crafting software that's both powerful and elegant.",
+    "I specialize in full-stack development, with expertise spanning modern frontend frameworks, robust backend architectures, and cloud-native infrastructure. I believe great software is born at the intersection of technical excellence and thoughtful design.",
+    "When I'm not coding, you'll find me exploring new technologies, contributing to open-source projects, and continuously pushing the boundaries of my craft.",
   ],
   stats: [
-    { label: "Specialty", value: "Interactive portfolio and marketing UI" },
-    { label: "Focus", value: "Design-led frontend systems" },
-    { label: "Workflow", value: "Concept, motion, build, polish" },
+    { label: "Years Experience", value: "3+" },
+    { label: "Projects Completed", value: "15+" },
+    { label: "Technologies", value: "20+" },
+    { label: "Lines of Code", value: "100K+" },
   ],
-  contact: {
-    email: "hello@bilalkhan.dev",
-    availability:
-      "Open to freelance work, product teams, and creative collaborations.",
-    socials: [
-      { label: "GitHub", href: "https://github.com/" },
-      { label: "LinkedIn", href: "https://linkedin.com/" },
-      { label: "Instagram", href: "https://instagram.com/" },
+};
+
+export const skillsData: Skill[] = [
+  // Frontend
+  { name: "React", icon: "⚛️", category: "frontend" },
+  { name: "Next.js", icon: "▲", category: "frontend" },
+  { name: "TypeScript", icon: "🔷", category: "frontend" },
+  { name: "JavaScript", icon: "🟨", category: "frontend" },
+  { name: "HTML/CSS", icon: "🎨", category: "frontend" },
+  { name: "Tailwind CSS", icon: "💨", category: "frontend" },
+  // Backend
+  { name: "Node.js", icon: "🟩", category: "backend" },
+  { name: "Python", icon: "🐍", category: "backend" },
+  { name: "PostgreSQL", icon: "🐘", category: "backend" },
+  { name: "MongoDB", icon: "🍃", category: "backend" },
+  { name: "REST APIs", icon: "🔌", category: "backend" },
+  { name: "GraphQL", icon: "◈", category: "backend" },
+  // DevOps
+  { name: "Docker", icon: "🐳", category: "devops" },
+  { name: "AWS", icon: "☁️", category: "devops" },
+  { name: "CI/CD", icon: "🔄", category: "devops" },
+  { name: "Linux", icon: "🐧", category: "devops" },
+  // Tools
+  { name: "Git", icon: "🔀", category: "tools" },
+  { name: "VS Code", icon: "💻", category: "tools" },
+  { name: "Figma", icon: "🎯", category: "tools" },
+  { name: "Jira", icon: "📋", category: "tools" },
+];
+
+export const projectsData: Project[] = [
+  {
+    id: "proj-1",
+    title: "Scalable Trading Platform",
+    summary: "High-frequency trading system with real-time data processing",
+    description:
+      "Engineered a high-performance trading platform processing thousands of transactions per second with sub-millisecond latency. Built with microservices architecture and real-time WebSocket feeds.",
+    stack: ["React", "Node.js", "PostgreSQL", "Redis", "WebSocket"],
+    href: "#",
+    image: "/project-1.png",
+    category: "Full Stack",
+  },
+  {
+    id: "proj-2",
+    title: "Cloud Infrastructure Dashboard",
+    summary: "Enterprise cloud resource management and monitoring",
+    description:
+      "Built a comprehensive cloud infrastructure management dashboard enabling teams to monitor, scale, and optimize their cloud resources in real-time across multiple providers.",
+    stack: ["Next.js", "TypeScript", "AWS", "Docker", "Terraform"],
+    href: "#",
+    image: "/project-2.png",
+    category: "DevOps",
+  },
+  {
+    id: "proj-3",
+    title: "AI-Powered Analytics Engine",
+    summary: "Machine learning pipeline for predictive business intelligence",
+    description:
+      "Developed an intelligent analytics platform that leverages machine learning to provide predictive insights, anomaly detection, and automated reporting for enterprise clients.",
+    stack: ["Python", "TensorFlow", "React", "FastAPI", "PostgreSQL"],
+    href: "#",
+    image: "/project-3.png",
+    category: "AI/ML",
+  },
+  {
+    id: "proj-4",
+    title: "Social Commerce App",
+    summary: "Mobile-first marketplace with social features",
+    description:
+      "Created a social commerce platform combining e-commerce with social networking features, enabling users to discover, share, and purchase products within a community-driven experience.",
+    stack: ["React Native", "Node.js", "MongoDB", "Stripe", "Firebase"],
+    href: "#",
+    image: "/project-4.png",
+    category: "Mobile",
+  },
+  {
+    id: "proj-5",
+    title: "Real-Time Analytics Dashboard",
+    summary: "Live data visualization and business intelligence platform",
+    description:
+      "Designed and built a real-time analytics dashboard processing millions of events per day, featuring interactive visualizations, custom alerts, and collaborative reporting tools.",
+    stack: ["React", "D3.js", "Node.js", "ClickHouse", "Kafka"],
+    href: "#",
+    image: "/project-5.png",
+    category: "Data",
+  },
+];
+
+export const experienceData: TimelineEntry[] = [
+  {
+    id: "exp-1",
+    date: "2024 — Present",
+    role: "Software Engineer",
+    company: "Tech Company",
+    description:
+      "Leading development of scalable web applications and microservices. Driving architectural decisions and mentoring junior developers.",
+    highlights: [
+      "Architected microservices serving 1M+ daily requests",
+      "Reduced deployment time by 60% through CI/CD optimization",
+      "Led migration to cloud-native infrastructure",
     ],
   },
+  {
+    id: "exp-2",
+    date: "2023 — 2024",
+    role: "Full Stack Developer",
+    company: "Startup Inc.",
+    description:
+      "Built and shipped multiple product features end-to-end. Collaborated closely with design and product teams to deliver exceptional user experiences.",
+    highlights: [
+      "Shipped 5 major product features from concept to launch",
+      "Improved application performance by 40%",
+      "Implemented real-time collaboration features",
+    ],
+  },
+  {
+    id: "exp-3",
+    date: "2022 — 2023",
+    role: "Junior Developer",
+    company: "Digital Agency",
+    description:
+      "Developed responsive web applications and contributed to internal tooling. Gained deep expertise in modern JavaScript frameworks and agile methodologies.",
+    highlights: [
+      "Delivered 10+ client projects on time",
+      "Built reusable component library used across projects",
+      "Contributed to open-source tools",
+    ],
+  },
+];
+
+export const contactData = {
+  headline: "Let's Work Together",
+  description:
+    "I'm always interested in hearing about new projects and opportunities. Whether you have a question or just want to say hi, feel free to reach out.",
+  email: "josenraju@email.com",
+  socials: [
+    { label: "GitHub", href: "https://github.com/", icon: "github" },
+    { label: "LinkedIn", href: "https://linkedin.com/", icon: "linkedin" },
+    { label: "X", href: "https://x.com/", icon: "x" },
+  ] as Social[],
 };
