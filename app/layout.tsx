@@ -17,20 +17,22 @@ const spaceGrotesk = Space_Grotesk({
 export const metadata: Metadata = {
   title: "Josen Raju | Software Engineer",
   description:
-    "Portfolio of Josen Raju — Software Engineer building scalable systems and crafting digital experiences. Explore my projects, skills, and professional journey.",
+    "Portfolio of Josen Raju, a software engineer building reliable web, mobile, and Android experiences with Java, React, React Native, and JavaScript.",
   keywords: [
     "Josen Raju",
     "software engineer",
     "full stack developer",
     "portfolio",
-    "web developer",
+    "frontend developer",
+    "mobile developer",
     "React",
-    "Next.js",
-    "TypeScript",
+    "React Native",
+    "Java",
   ],
   openGraph: {
     title: "Josen Raju | Software Engineer",
-    description: "Building Scalable Systems & Crafting Digital Experiences",
+    description:
+      "Software Engineer building reliable Web, Mobile, and Android experiences.",
     type: "website",
   },
 };
@@ -41,7 +43,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${inter.variable} ${spaceGrotesk.variable}`}>
+    <html lang='en' className={`${inter.variable} ${spaceGrotesk.variable}`}>
       <body>{children}</body>
     </html>
   );

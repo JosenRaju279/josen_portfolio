@@ -3,14 +3,6 @@
 import { contactData } from "@/lib/portfolio-data";
 import { FadeIn } from "@/components/effects/scroll-animations";
 
-function GithubIcon() {
-  return (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-      <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
-    </svg>
-  );
-}
-
 function LinkedInIcon() {
   return (
     <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
@@ -19,24 +11,41 @@ function LinkedInIcon() {
   );
 }
 
-function XIcon() {
+function GitHubIcon() {
   return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-      <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M12 .5C5.65.5.5 5.66.5 12.02c0 5.1 3.3 9.42 7.87 10.95.58.1.79-.25.79-.56 0-.28-.01-1.2-.02-2.17-3.2.7-3.88-1.36-3.88-1.36-.52-1.34-1.28-1.7-1.28-1.7-1.05-.72.08-.71.08-.71 1.16.08 1.77 1.2 1.77 1.2 1.03 1.78 2.7 1.27 3.36.97.1-.75.4-1.27.73-1.56-2.56-.29-5.25-1.29-5.25-5.75 0-1.27.45-2.31 1.2-3.12-.12-.29-.52-1.47.12-3.06 0 0 .98-.32 3.2 1.2a11.03 11.03 0 0 1 5.82 0c2.22-1.52 3.2-1.2 3.2-1.2.64 1.59.24 2.77.12 3.06.75.81 1.2 1.85 1.2 3.12 0 4.47-2.69 5.45-5.26 5.74.42.36.78 1.06.78 2.14 0 1.55-.01 2.79-.01 3.17 0 .31.21.67.8.56A11.53 11.53 0 0 0 23.5 12C23.5 5.66 18.35.5 12 .5Z" />
+    </svg>
+  );
+}
+
+function MailIcon() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+      <path d="M4 6h16v12H4z" />
+      <path d="m4 8 8 6 8-6" />
+    </svg>
+  );
+}
+
+function LocationIcon() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+      <path d="M12 21s6-5.33 6-11a6 6 0 1 0-12 0c0 5.67 6 11 6 11Z" />
+      <circle cx="12" cy="10" r="2.5" />
     </svg>
   );
 }
 
 const iconMap: Record<string, () => React.JSX.Element> = {
-  github: GithubIcon,
+  github: GitHubIcon,
   linkedin: LinkedInIcon,
-  x: XIcon,
 };
 
 export function ContactSection() {
   return (
     <section id="contact" className="section">
-      <div className="section-container" style={{ maxWidth: 700 }}>
+      <div className="section-container" style={{ maxWidth: 820 }}>
         <FadeIn>
           <p className="section-label" style={{ textAlign: "center", marginBottom: 12 }}>Get In Touch</p>
           <h2 className="heading-lg" style={{ textAlign: "center", marginBottom: 16 }}>
@@ -48,28 +57,52 @@ export function ContactSection() {
         </FadeIn>
 
         <FadeIn delay={0.2}>
-          <form className="contact-form" onSubmit={(e) => e.preventDefault()}>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
-              <input className="contact-input" placeholder="Your Name" aria-label="Name" />
-              <input className="contact-input" type="email" placeholder="Your Email" aria-label="Email" />
+          <div className="contact-grid">
+            <div className="contact-card glass">
+              <div className="contact-card__icon">
+                <MailIcon />
+              </div>
+              <div>
+                <p className="contact-card__label">Email</p>
+                <a href={`mailto:${contactData.email}`} className="contact-card__value">
+                  {contactData.email}
+                </a>
+              </div>
             </div>
-            <input className="contact-input" placeholder="Subject" aria-label="Subject" />
-            <textarea className="contact-textarea" placeholder="Your Message" aria-label="Message" />
-            <button type="submit" className="btn-primary" style={{ alignSelf: "center", minWidth: 200 }}>
-              <span>Send Message</span>
-              <span>→</span>
-            </button>
-          </form>
+
+            <div className="contact-card glass">
+              <div className="contact-card__icon">
+                <LocationIcon />
+              </div>
+              <div>
+                <p className="contact-card__label">Location</p>
+                <p className="contact-card__value">{contactData.location}</p>
+              </div>
+            </div>
+          </div>
         </FadeIn>
 
         <FadeIn delay={0.4}>
-          <div className="contact-socials">
+          <div className="contact-actions">
+            <a href={`mailto:${contactData.email}`} className="btn-primary">
+              <MailIcon />
+              <span>Email Me</span>
+            </a>
+
             {contactData.socials.map((social) => {
               const Icon = iconMap[social.icon];
               return (
-                <a key={social.label} href={social.href} target="_blank" rel="noopener noreferrer"
-                  className="social-link" aria-label={social.label} title={social.label}>
-                  {Icon ? <Icon /> : social.label}
+                <a
+                  key={social.label}
+                  href={social.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn-secondary"
+                  aria-label={social.label}
+                  title={social.label}
+                >
+                  {Icon ? <Icon /> : null}
+                  <span>{social.label}</span>
                 </a>
               );
             })}

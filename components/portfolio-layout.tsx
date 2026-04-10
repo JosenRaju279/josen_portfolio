@@ -16,7 +16,6 @@ export function PortfolioLayout({ children }: { children: ReactNode }) {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // Intersection observer for active nav link
   useEffect(() => {
     const ids = navItems.map((n) => n.href.replace("#", ""));
     const observer = new IntersectionObserver(
@@ -44,7 +43,6 @@ export function PortfolioLayout({ children }: { children: ReactNode }) {
     <>
       <CustomCursor />
 
-      {/* Navbar */}
       <nav className={`navbar${scrolled ? " navbar--scrolled" : ""}`}>
         <div className="navbar__inner">
           <a href="#hero" className="navbar__logo">
@@ -78,7 +76,6 @@ export function PortfolioLayout({ children }: { children: ReactNode }) {
         </div>
       </nav>
 
-      {/* Mobile menu */}
       <AnimatePresence>
         {menuOpen && (
           <motion.div
@@ -104,14 +101,12 @@ export function PortfolioLayout({ children }: { children: ReactNode }) {
         )}
       </AnimatePresence>
 
-      {/* Main content */}
       <main>{children}</main>
 
-      {/* Footer */}
       <footer className="footer">
         <div className="section-container">
           <p>
-            © {new Date().getFullYear()} <span className="text-gradient">Josen Raju</span>. Built with passion & precision.
+            &copy; {new Date().getFullYear()} <span className="text-gradient">Josen Raju</span>. Built with care, clarity, and a focus on impact.
           </p>
         </div>
       </footer>
