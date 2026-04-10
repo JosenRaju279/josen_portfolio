@@ -4,22 +4,22 @@ export type Project = {
   summary: string;
   description: string;
   stack: string[];
-  href: string;
-  image: string;
+  href?: string;
+  metric: string;
   category: string;
 };
 
 export type Skill = {
   name: string;
   icon: string;
-  category: "frontend" | "backend" | "devops" | "tools";
+  category: "frontend" | "backend" | "qa" | "tools";
 };
 
 export type TimelineEntry = {
   id: string;
   date: string;
   role: string;
-  company: string;
+  company?: string;
   description: string;
   highlights: string[];
 };
@@ -47,166 +47,135 @@ export const navItems: NavItem[] = [
 export const heroData = {
   greeting: "Hello, I'm",
   name: "Josen Raju",
-  title: "Software Engineer",
-  subtitle: "Building Scalable Systems & Crafting Digital Experiences",
+  title: "Software Engineer ",
+  subtitle: " Building reliable Web And Mobile",
   description:
-    "I design and build high-performance applications that solve real-world problems. Passionate about clean architecture, intuitive interfaces, and pushing the boundaries of what's possible on the web.",
+    "I build production-ready applications and I bring a testing-first mindset that helps teams ship faster with confidence.",
+  highlights: [
+    "Open to software Engineering roles",
+    "Pune, Maharashtra, India",
+    "React, React Native, Java, JavaScript, Python", 
+  ],
   cta: {
-    primary: { label: "View My Work", href: "#projects" },
+    primary: { label: "View Projects", href: "#projects" },
     secondary: { label: "Contact Me", href: "#contact" },
   },
 };
 
 export const aboutData = {
-  headline: "About Me",
+  headline: "Developer mindset. QA discipline. Product focus.",
   paragraphs: [
-    "I'm a software engineer with a passion for building products that make a difference. My journey in tech started with curiosity and evolved into a deep commitment to crafting software that's both powerful and elegant.",
-    "I specialize in full-stack development, with expertise spanning modern frontend frameworks, robust backend architectures, and cloud-native infrastructure. I believe great software is born at the intersection of technical excellence and thoughtful design.",
-    "When I'm not coding, you'll find me exploring new technologies, contributing to open-source projects, and continuously pushing the boundaries of my craft.",
+    "I am a software engineer with hands-on experience shipping features across web, mobile, and TV applications in Agile environments.",
+    "My work blends development and quality engineering: building responsive interfaces, integrating APIs, handling application state, and validating releases through structured manual and regression testing.",
+    "What sets me apart is the mix of ownership, communication, and detail orientation I bring to a team. I care about user experience, code quality, and delivering software that works reliably in production.",
   ],
   stats: [
-    { label: "Years Experience", value: "3+" },
-    { label: "Projects Completed", value: "15+" },
-    { label: "Technologies", value: "20+" },
-    { label: "Lines of Code", value: "100K+" },
+    { label: "Feature Modules Shipped", value: "8+" },
+    { label: "Manual Test Cases", value: "100+" },
+    { label: "Critical Bugs Caught", value: "20+" },
+    { label: "Users Supported", value: "500+" },
   ],
 };
 
+const DEVICON = "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons";
+
 export const skillsData: Skill[] = [
   // Frontend
-  { name: "React", icon: "⚛️", category: "frontend" },
-  { name: "Next.js", icon: "▲", category: "frontend" },
-  { name: "TypeScript", icon: "🔷", category: "frontend" },
-  { name: "JavaScript", icon: "🟨", category: "frontend" },
-  { name: "HTML/CSS", icon: "🎨", category: "frontend" },
-  { name: "Tailwind CSS", icon: "💨", category: "frontend" },
+  { name: "React.js", icon: `${DEVICON}/react/react-original.svg`, category: "frontend" },
+  { name: "React Native", icon: `${DEVICON}/react/react-original.svg`, category: "frontend" },
+  { name: "JavaScript", icon: `${DEVICON}/javascript/javascript-original.svg`, category: "frontend" },
+  { name: "HTML5", icon: `${DEVICON}/html5/html5-original.svg`, category: "frontend" },
+  { name: "CSS3", icon: `${DEVICON}/css3/css3-original.svg`, category: "frontend" },
+  { name: "Bootstrap", icon: `${DEVICON}/bootstrap/bootstrap-original.svg`, category: "frontend" },
+  { name: "Material UI", icon: `${DEVICON}/materialui/materialui-original.svg`, category: "frontend" },
+  { name: "Android XML", icon: `${DEVICON}/android/android-original.svg`, category: "frontend" },
   // Backend
-  { name: "Node.js", icon: "🟩", category: "backend" },
-  { name: "Python", icon: "🐍", category: "backend" },
-  { name: "PostgreSQL", icon: "🐘", category: "backend" },
-  { name: "MongoDB", icon: "🍃", category: "backend" },
-  { name: "REST APIs", icon: "🔌", category: "backend" },
-  { name: "GraphQL", icon: "◈", category: "backend" },
-  // DevOps
-  { name: "Docker", icon: "🐳", category: "devops" },
-  { name: "AWS", icon: "☁️", category: "devops" },
-  { name: "CI/CD", icon: "🔄", category: "devops" },
-  { name: "Linux", icon: "🐧", category: "devops" },
+  { name: "Java", icon: `${DEVICON}/java/java-original.svg`, category: "backend" },
+  { name: "Python", icon: `${DEVICON}/python/python-original.svg`, category: "backend" },
+  { name: "Node.js", icon: `${DEVICON}/nodejs/nodejs-original.svg`, category: "backend" },
+  { name: "Flask", icon: `${DEVICON}/flask/flask-original.svg`, category: "backend" },
+  { name: "Spring Boot", icon: `${DEVICON}/spring/spring-original.svg`, category: "backend" },
+  { name: "REST APIs", icon: "custom:api", category: "backend" },
+  { name: "MySQL", icon: `${DEVICON}/mysql/mysql-original.svg`, category: "backend" },
+  { name: "PostgreSQL", icon: `${DEVICON}/postgresql/postgresql-original.svg`, category: "backend" },
+  { name: "Firebase Firestore", icon: `${DEVICON}/firebase/firebase-original.svg`, category: "backend" },
+  { name: "Prisma ORM", icon: `${DEVICON}/prisma/prisma-original.svg`, category: "backend" },
+  // QA
+  { name: "Manual Testing", icon: "custom:manual-testing", category: "qa" },
+  { name: "Regression Testing", icon: "custom:regression", category: "qa" },
+  { name: "Test Case Design", icon: "custom:test-case", category: "qa" },
+  { name: "Bug Reporting", icon: "custom:bug", category: "qa" },
+  { name: "Agile / Scrum", icon: "custom:agile", category: "qa" },
   // Tools
-  { name: "Git", icon: "🔀", category: "tools" },
-  { name: "VS Code", icon: "💻", category: "tools" },
-  { name: "Figma", icon: "🎯", category: "tools" },
-  { name: "Jira", icon: "📋", category: "tools" },
+  { name: "Git / GitHub", icon: `${DEVICON}/git/git-original.svg`, category: "tools" },
+  { name: "Postman", icon: `${DEVICON}/postman/postman-original.svg`, category: "tools" },
+  { name: "Android Studio", icon: `${DEVICON}/androidstudio/androidstudio-original.svg`, category: "tools" },
+  { name: "VS Code", icon: `${DEVICON}/vscode/vscode-original.svg`, category: "tools" },
+  { name: "Firebase Console", icon: `${DEVICON}/firebase/firebase-original.svg`, category: "tools" },
+  { name: "Chrome DevTools", icon: `${DEVICON}/chrome/chrome-original.svg`, category: "tools" },
 ];
 
 export const projectsData: Project[] = [
   {
     id: "proj-1",
-    title: "Scalable Trading Platform",
-    summary: "High-frequency trading system with real-time data processing",
+    title: "Real-Time Chat Application",
+    summary: "Android chat app with fast message delivery and secure authentication.",
     description:
-      "Engineered a high-performance trading platform processing thousands of transactions per second with sub-millisecond latency. Built with microservices architecture and real-time WebSocket feeds.",
-    stack: ["React", "Node.js", "PostgreSQL", "Redis", "WebSocket"],
-    href: "#",
-    image: "/project-1.png",
-    category: "Full Stack",
+      "Engineered a real-time messaging Android app for 100+ concurrent users using Java and Firebase Firestore. Added Firebase Authentication with email/password and Google Sign-In, and built reusable Material Design UI components to improve maintainability.",
+    stack: ["Java", "Firebase Auth", "Firestore", "Android Studio", "XML"],
+    metric: "100+ concurrent users",
+    category: "Android",
   },
   {
     id: "proj-2",
-    title: "Cloud Infrastructure Dashboard",
-    summary: "Enterprise cloud resource management and monitoring",
+    title: "Intelligent Voice Assistant",
+    summary: "Python assistant that automates daily tasks through voice commands.",
     description:
-      "Built a comprehensive cloud infrastructure management dashboard enabling teams to monitor, scale, and optimize their cloud resources in real-time across multiple providers.",
-    stack: ["Next.js", "TypeScript", "AWS", "Docker", "Terraform"],
-    href: "#",
-    image: "/project-2.png",
-    category: "DevOps",
+      "Built a voice assistant using speech recognition and natural language processing, supporting 50+ commands with 85% accuracy. Integrated weather, news, and stock APIs and automated everyday tasks such as searches, email actions, and productivity workflows.",
+    stack: ["Python", "SpeechRecognition", "pyttsx3", "REST APIs", "JSON"],
+    metric: "85% command accuracy",
+    category: "AI Automation",
   },
   {
     id: "proj-3",
-    title: "AI-Powered Analytics Engine",
-    summary: "Machine learning pipeline for predictive business intelligence",
+    title: "Stock Market Application",
+    summary: "Interactive market views with faster rendering and clearer insights.",
     description:
-      "Developed an intelligent analytics platform that leverages machine learning to provide predictive insights, anomaly detection, and automated reporting for enterprise clients.",
-    stack: ["Python", "TensorFlow", "React", "FastAPI", "PostgreSQL"],
-    href: "#",
-    image: "/project-3.png",
-    category: "AI/ML",
-  },
-  {
-    id: "proj-4",
-    title: "Social Commerce App",
-    summary: "Mobile-first marketplace with social features",
-    description:
-      "Created a social commerce platform combining e-commerce with social networking features, enabling users to discover, share, and purchase products within a community-driven experience.",
-    stack: ["React Native", "Node.js", "MongoDB", "Stripe", "Firebase"],
-    href: "#",
-    image: "/project-4.png",
-    category: "Mobile",
-  },
-  {
-    id: "proj-5",
-    title: "Real-Time Analytics Dashboard",
-    summary: "Live data visualization and business intelligence platform",
-    description:
-      "Designed and built a real-time analytics dashboard processing millions of events per day, featuring interactive visualizations, custom alerts, and collaborative reporting tools.",
-    stack: ["React", "D3.js", "Node.js", "ClickHouse", "Kafka"],
-    href: "#",
-    image: "/project-5.png",
-    category: "Data",
+      "Contributed real-time data visualization components for a stock market application and improved page load time by 30% through optimized rendering logic. Focused on frontend clarity, responsiveness, and data-driven UI behavior.",
+    stack: ["React", "JavaScript", "Charts", "REST APIs", "Performance Optimization"],
+    metric: "30% faster page loads",
+    category: "Web App",
   },
 ];
 
 export const experienceData: TimelineEntry[] = [
   {
     id: "exp-1",
-    date: "2024 — Present",
-    role: "Software Engineer",
-    company: "Tech Company",
+    date: "Recent Internship Experience",
+    role: "Software Development Intern",
+    company: "Web, Mobile, and TV Applications",
     description:
-      "Leading development of scalable web applications and microservices. Driving architectural decisions and mentoring junior developers.",
+      "Worked across product development and quality assurance, building user-facing features, integrating APIs, and helping teams release stable software in Agile sprints.",
     highlights: [
-      "Architected microservices serving 1M+ daily requests",
-      "Reduced deployment time by 60% through CI/CD optimization",
-      "Led migration to cloud-native infrastructure",
-    ],
-  },
-  {
-    id: "exp-2",
-    date: "2023 — 2024",
-    role: "Full Stack Developer",
-    company: "Startup Inc.",
-    description:
-      "Built and shipped multiple product features end-to-end. Collaborated closely with design and product teams to deliver exceptional user experiences.",
-    highlights: [
-      "Shipped 5 major product features from concept to launch",
-      "Improved application performance by 40%",
-      "Implemented real-time collaboration features",
-    ],
-  },
-  {
-    id: "exp-3",
-    date: "2022 — 2023",
-    role: "Junior Developer",
-    company: "Digital Agency",
-    description:
-      "Developed responsive web applications and contributed to internal tooling. Gained deep expertise in modern JavaScript frameworks and agile methodologies.",
-    highlights: [
-      "Delivered 10+ client projects on time",
-      "Built reusable component library used across projects",
-      "Contributed to open-source tools",
+      "Developed and deployed 8+ feature modules using Java, React, React Native, and JavaScript",
+      "Supported products used by 500+ active users across multiple platforms",
+      "Improved an AI-powered English learning platform with responsive UI work that increased user retention by 25%",
+      "Implemented Prisma ORM CRUD operations for user data and application state management",
+      "Integrated third-party REST APIs to improve data flow between frontend and backend services",
+      "Executed 100+ manual test cases and documented 20+ critical bugs before production deployment",
+      "Performed regression testing on 3 major releases and helped maintain zero critical production bugs",
     ],
   },
 ];
 
 export const contactData = {
-  headline: "Let's Work Together",
+  headline: "Let's Build Something Great",
   description:
-    "I'm always interested in hearing about new projects and opportunities. Whether you have a question or just want to say hi, feel free to reach out.",
-  email: "josenraju@email.com",
+    "I am actively looking for opportunities where I can contribute as a software engineer, frontend engineer, or mobile engineer. If you are hiring, I would love to connect.",
+  email: "Josenraju279@gmail.com",
+  location: "Pune, Maharashtra, India",
   socials: [
-    { label: "GitHub", href: "https://github.com/", icon: "github" },
-    { label: "LinkedIn", href: "https://linkedin.com/", icon: "linkedin" },
-    { label: "X", href: "https://x.com/", icon: "x" },
+    { label: "LinkedIn", href: "https://www.linkedin.com/in/josenraju", icon: "linkedin" },
+    { label: "GitHub", href: "https://github.com/josenraju279", icon: "github" },
   ] as Social[],
 };

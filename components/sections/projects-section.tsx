@@ -1,7 +1,15 @@
 "use client";
 
 import { projectsData } from "@/lib/portfolio-data";
-import { FadeIn, ScaleIn } from "@/components/effects/scroll-animations";
+import { FadeIn, StaggerContainer, StaggerItem } from "@/components/effects/scroll-animations";
+
+function ProjectNumber({ num }: { num: number }) {
+  return (
+    <span className="project-card__number">
+      {String(num).padStart(2, "0")}
+    </span>
+  );
+}
 
 export function ProjectsSection() {
   return (
@@ -12,35 +20,36 @@ export function ProjectsSection() {
           <h2 className="heading-lg" style={{ textAlign: "center", marginBottom: 16 }}>
             Featured <span className="text-gradient">Projects</span>
           </h2>
-          <p style={{ textAlign: "center", color: "var(--text-secondary)", maxWidth: 500, margin: "0 auto 48px", fontSize: "0.95rem" }}>
-            A selection of projects that showcase my skills and passion for building great software.
+          <p style={{ textAlign: "center", color: "var(--text-secondary)", maxWidth: 620, margin: "0 auto 48px", fontSize: "0.95rem", lineHeight: 1.8 }}>
+            Selected work that highlights mobile engineering, automation, API integration, and performance-focused frontend development.
           </p>
         </FadeIn>
-      </div>
 
-      <div className="section-container" style={{ maxWidth: 1400, padding: "0 24px" }}>
-        <div className="projects-scroll">
+        <StaggerContainer className="projects-grid">
           {projectsData.map((project, i) => (
-            <ScaleIn key={project.id} delay={i * 0.1}>
-              <a href={project.href} className="project-card card" style={{ display: "block", borderRadius: 20 }}>
-                <div className="project-card__image">
-                  <img src={project.image} alt={project.title} loading="lazy" />
-                  <div className="project-card__overlay" />
-                  <span className="project-card__category">{project.category}</span>
+            <StaggerItem key={project.id}>
+              <article className="project-card card" style={{ display: "block", borderRadius: 20 }}>
+                <div className="project-card__hero">
+                  <div className="project-card__hero-top">
+                    <span className="project-card__category">{project.category}</span>
+                    <ProjectNumber num={i + 1} />
+                  </div>
+                  <div className="project-card__metric">{project.metric}</div>
                 </div>
                 <div className="project-card__body">
                   <h3 className="project-card__title">{project.title}</h3>
                   <p className="project-card__summary">{project.summary}</p>
+                  <p className="project-card__description">{project.description}</p>
                   <div className="project-card__stack">
                     {project.stack.map((tag) => (
                       <span key={tag} className="project-card__tag">{tag}</span>
                     ))}
                   </div>
                 </div>
-              </a>
-            </ScaleIn>
+              </article>
+            </StaggerItem>
           ))}
-        </div>
+        </StaggerContainer>
       </div>
     </section>
   );

@@ -22,7 +22,7 @@ export function ExperienceSection() {
                 <div className="timeline-card glass" style={{ borderRadius: 16 }}>
                   <p className="timeline-date">{entry.date}</p>
                   <h3 className="timeline-role">{entry.role}</h3>
-                  <p className="timeline-company">{entry.company}</p>
+                  {entry.company ? <p className="timeline-company">{entry.company}</p> : null}
                   <p className="timeline-desc">{entry.description}</p>
                   <ul className="timeline-highlights">
                     {entry.highlights.map((h, j) => (
