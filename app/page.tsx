@@ -1,20 +1,5 @@
-import { PortfolioLayout } from "@/components/portfolio-layout";
-import { HeroSection } from "@/components/sections/hero-section";
-import { AboutSection } from "@/components/sections/about-section";
-import { SkillsSection } from "@/components/sections/skills-section";
-import { ProjectsSection } from "@/components/sections/projects-section";
-import { ExperienceSection } from "@/components/sections/experience-section";
-import { ContactSection } from "@/components/sections/contact-section";
+import { SpaceJourneyPortfolio } from "@/components/space-journey-portfolio";
 
 export default function Page() {
-  return (
-    <PortfolioLayout>
-      <HeroSection />
-      <AboutSection />
-      <SkillsSection />
-      <ProjectsSection />
-      <ExperienceSection />
-      <ContactSection />
-    </PortfolioLayout>
-  );
+  return <SpaceJourneyPortfolio />;
 }
