@@ -3,4 +3,11 @@
 html,
 body {
   margin: 0;
+  background: #000;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+body::-webkit-scrollbar {
+  display: none;
 }

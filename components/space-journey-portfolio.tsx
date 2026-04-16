@@ -2,15 +2,32 @@
 
 import { Suspense, useEffect, useMemo, useRef, useState } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
-import { useAnimations, useGLTF, useProgress } from "@react-three/drei";
+import { useAnimations, useGLTF } from "@react-three/drei";
 import * as THREE from "three";
 import { clone } from "three/examples/jsm/utils/SkeletonUtils.js";
 
-const characterModelUrl = new URL("./models/3Dspace_boi.glb", import.meta.url).href;
-const rocketModelUrl = new URL("./models/3Drocket_modal.glb", import.meta.url).href;
+const rocketModelUrl = new URL("./models/3Drocket_modal.glb", import.meta.url)
+  .href;
+const characterModelUrl = new URL("./models/3Dspace_boi.glb", import.meta.url)
+  .href;
+
+const ROCKET_START_POSITION: [number, number, number] = [0.0, 0.3, 0];
+const ROCKET_START_ROTATION: [number, number, number] = [
+  0.05,
+  -Math.PI / 2,
+  0.1,
+];
+const ROCKET_EXIT_POSITION_OFFSET: [number, number, number] = [2.0, -0.15, 0];
+const ROCKET_EXIT_ROTATION_OFFSET: [number, number, number] = [0, 0.05, 0];
+const ROCKET_IDLE_ROLL = 0.02;
 
 function clamp01(value: number) {
   return Math.min(1, Math.max(0, value));
+}
+
+function smoothStep(edge0: number, edge1: number, value: number) {
+  const t = clamp01((value - edge0) / (edge1 - edge0));
+  return t * t * (3 - 2 * t);
 }
 
 function fitScene(scene: THREE.Group, targetSize: number) {
@@ -27,23 +44,14 @@ function fitScene(scene: THREE.Group, targetSize: number) {
   clonedScene.scale.setScalar(targetSize / largestDimension);
 
   clonedScene.traverse((object) => {
-    if (!(object instanceof THREE.Mesh)) {
-      return;
-    }
-
+    if (!(object instanceof THREE.Mesh)) return;
     object.castShadow = true;
     object.receiveShadow = true;
-
     const materials = Array.isArray(object.material)
       ? object.material
       : [object.material];
-
     materials.forEach((material) => {
-      if (!material) {
-        return;
-      }
-
-      if ("side" in material) {
+      if (material && "side" in material) {
         material.side = THREE.DoubleSide;
       }
     });
@@ -52,41 +60,33 @@ function fitScene(scene: THREE.Group, targetSize: number) {
   return clonedScene;
 }
 
-function LoadingScreen() {
-  const { active, progress } = useProgress();
-
-  if (!active && progress >= 100) {
-    return null;
-  }
-
-  return (
-    <div
-      style={{
-        position: "fixed",
-        inset: 0,
-        zIndex: 10,
-        display: "grid",
-        placeItems: "center",
-        background: "#000",
-        color: "#fff",
-        pointerEvents: "none",
-      }}
-    >
-      <p>{Math.round(progress)}%</p>
-    </div>
-  );
-}
-
 function CameraRig({ progress }: { progress: number }) {
   useFrame((state) => {
-    const rocketView = new THREE.Vector3(2.8, 0.8, 9.5);
-    const characterView = new THREE.Vector3(0, 1.6, 8);
-    const target = rocketView.clone().lerp(characterView, progress);
-    const rocketLookAt = new THREE.Vector3(1.2, 0.1, 0);
-    const characterLookAt = new THREE.Vector3(0, -0.2, 0);
-    const lookAt = rocketLookAt.clone().lerp(characterLookAt, progress);
+    const rocketPhase = smoothStep(0, 0.58, progress);
+    const revealPhase = smoothStep(0.52, 1, progress);
 
-    state.camera.position.lerp(target, 0.08);
+    // Camera sits BEHIND the rocket (negative X = behind since rocket flies +X)
+    // Slightly right and up so we see the rocket body + rings in background
+    const startPosition = new THREE.Vector3(-1.6, 0.5, 0.0);
+    const rocketEntryPosition = new THREE.Vector3(-1.2, 0.45, 0);
+    const characterPosition = new THREE.Vector3(0, 1.05, 8.1);
+
+    // Look forward toward where rocket is heading (+X direction)
+    const startLookAt = new THREE.Vector3(0.2, 0.1, 0);
+    const rocketLookAt = new THREE.Vector3(2.0, -0.05, 0);
+    const characterLookAt = new THREE.Vector3(0, 0.2, 0);
+
+    const cameraPosition = startPosition
+      .clone()
+      .lerp(rocketEntryPosition, rocketPhase)
+      .lerp(characterPosition, revealPhase);
+
+    const lookAt = startLookAt
+      .clone()
+      .lerp(rocketLookAt, rocketPhase)
+      .lerp(characterLookAt, revealPhase);
+
+    state.camera.position.lerp(cameraPosition, 0.08);
     state.camera.lookAt(lookAt);
   });
 
@@ -98,23 +98,37 @@ function RocketModel({ progress }: { progress: number }) {
     scene: THREE.Group;
     animations: THREE.AnimationClip[];
   };
-  const scene = useMemo(() => fitScene(gltf.scene, 2.8), [gltf.scene]);
+  const scene = useMemo(() => fitScene(gltf.scene, 3.3), [gltf.scene]);
   const groupRef = useRef<THREE.Group>(null);
   const { actions } = useAnimations(gltf.animations, scene);
 
   useEffect(() => {
-    Object.values(actions).forEach((action) => action?.reset().fadeIn(0.3).play());
+    Object.values(actions).forEach((action) =>
+      action?.reset().fadeIn(0.3).play(),
+    );
   }, [actions]);
 
-  useFrame(() => {
+  useFrame((state) => {
     const group = groupRef.current;
-    if (!group) {
-      return;
-    }
+    if (!group) return;
 
-    group.visible = progress < 0.98;
-    group.position.set(2.2, 0, 0);
-    group.rotation.set(0.08, -Math.PI / 2, 0.12);
+    const time = state.clock.getElapsedTime();
+    const exitPhase = smoothStep(0.48, 0.82, progress);
+
+    group.visible = exitPhase < 0.995;
+    group.position.set(
+      ROCKET_START_POSITION[0] + exitPhase * ROCKET_EXIT_POSITION_OFFSET[0],
+      ROCKET_START_POSITION[1] + exitPhase * ROCKET_EXIT_POSITION_OFFSET[1],
+      ROCKET_START_POSITION[2] + exitPhase * ROCKET_EXIT_POSITION_OFFSET[2],
+    );
+    group.rotation.set(
+      ROCKET_START_ROTATION[0] + exitPhase * ROCKET_EXIT_ROTATION_OFFSET[0],
+      ROCKET_START_ROTATION[1] + exitPhase * ROCKET_EXIT_ROTATION_OFFSET[1],
+      ROCKET_START_ROTATION[2] +
+        exitPhase * ROCKET_EXIT_ROTATION_OFFSET[2] +
+        Math.sin(time * 0.5) * ROCKET_IDLE_ROLL,
+    );
+    group.scale.setScalar(1 + exitPhase * 1.6);
   });
 
   return (
@@ -129,25 +143,27 @@ function CharacterModel({ progress }: { progress: number }) {
     scene: THREE.Group;
     animations: THREE.AnimationClip[];
   };
-  const scene = useMemo(() => fitScene(gltf.scene, 4.4), [gltf.scene]);
+  const scene = useMemo(() => fitScene(gltf.scene, 5.2), [gltf.scene]);
   const groupRef = useRef<THREE.Group>(null);
   const { actions } = useAnimations(gltf.animations, scene);
 
   useEffect(() => {
-    Object.values(actions).forEach((action) => action?.reset().fadeIn(0.3).play());
+    Object.values(actions).forEach((action) =>
+      action?.reset().fadeIn(0.3).play(),
+    );
   }, [actions]);
 
   useFrame((state) => {
     const group = groupRef.current;
-    if (!group) {
-      return;
-    }
+    if (!group) return;
 
     const time = state.clock.getElapsedTime();
-    group.visible = progress > 0.02;
-    group.position.set(0, -0.55 + (1 - progress) * 1.6, 0);
-    group.rotation.set(0, -0.3 + Math.sin(time * 0.4) * 0.05, 0);
-    group.scale.setScalar(0.82 + progress * 0.18);
+    const revealPhase = smoothStep(0.55, 0.92, progress);
+
+    group.visible = revealPhase > 0.02;
+    group.position.set(0, -2.6 + (1 - revealPhase) * 3.4, 0);
+    group.rotation.set(0, -0.2 + Math.sin(time * 0.45) * 0.08, 0);
+    group.scale.setScalar(0.7 + revealPhase * 0.42);
   });
 
   return (
@@ -157,84 +173,17 @@ function CharacterModel({ progress }: { progress: number }) {
   );
 }
 
-function BlackHole({ progress }: { progress: number }) {
-  const groupRef = useRef<THREE.Group>(null);
-
-  useFrame(() => {
-    const group = groupRef.current;
-    if (!group) {
-      return;
-    }
-
-    group.visible = progress < 0.98;
-  });
-
-  return (
-    <group ref={groupRef} position={[-3.8, 0.6, -2]}>
-      <mesh rotation={[0, 0, 0.5]}>
-        <torusGeometry args={[2.2, 0.7, 32, 120]} />
-        <meshStandardMaterial color="#f5f5f5" emissive="#ffffff" emissiveIntensity={1.6} />
-      </mesh>
-      <mesh rotation={[0, 0, 0.5]} scale={[1.3, 1.3, 1]}>
-        <torusGeometry args={[2.8, 0.26, 24, 120]} />
-        <meshStandardMaterial color="#d9d9d9" emissive="#ffffff" emissiveIntensity={0.8} />
-      </mesh>
-      <mesh position={[0, 0, 0.05]}>
-        <circleGeometry args={[1.65, 64]} />
-        <meshBasicMaterial color="#050505" />
-      </mesh>
-    </group>
-  );
-}
-
-function WarpStreaks({ progress }: { progress: number }) {
-  const streaks = useMemo(
-    () =>
-      [
-        { position: [-0.8, 1.8, -3], rotation: [0.08, 0.1, -0.2], scale: [6, 0.08, 0.08] },
-        { position: [0.2, -1.1, -2], rotation: [-0.15, 0.05, -0.24], scale: [7.5, 0.1, 0.1] },
-        { position: [1.1, -0.7, -1], rotation: [-0.08, 0.08, -0.18], scale: [5.6, 0.08, 0.08] },
-        { position: [4.8, 2.2, -2], rotation: [0.18, 0.2, -0.9], scale: [2.4, 0.07, 0.07] },
-        { position: [5.5, -1.9, -1], rotation: [-0.2, 0.1, -0.95], scale: [3.4, 0.09, 0.09] },
-        { position: [4.7, -2.7, 0], rotation: [-0.18, 0.12, -1.05], scale: [2.6, 0.08, 0.08] },
-        { position: [3.9, 1.1, -2], rotation: [0.2, 0.15, -0.82], scale: [1.8, 0.06, 0.06] },
-      ] as Array<{
-        position: [number, number, number];
-        rotation: [number, number, number];
-        scale: [number, number, number];
-      }>,
-    []
-  );
-
-  return (
-    <group visible={progress < 0.98}>
-      {streaks.map((streak, index) => (
-        <mesh
-          key={`${streak.position.join("-")}-${index}`}
-          position={streak.position}
-          rotation={streak.rotation}
-          scale={streak.scale}
-        >
-          <boxGeometry args={[1, 1, 1]} />
-          <meshBasicMaterial color="#f5f5f5" />
-        </mesh>
-      ))}
-    </group>
-  );
-}
-
 function Scene({ progress }: { progress: number }) {
   return (
     <>
       <color attach="background" args={["#000000"]} />
+      <fog attach="fog" args={["#000000", 10, 22]} />
       <CameraRig progress={progress} />
       <ambientLight intensity={0.9} />
       <directionalLight position={[6, 6, 8]} intensity={1.8} castShadow />
-      <pointLight position={[-7, 2, 2]} intensity={40} color="#ffffff" />
-      <pointLight position={[4, 2, 5]} intensity={10} color="#ffffff" />
+      <pointLight position={[5, 2, 6]} intensity={14} />
+      <pointLight position={[-4, 2, 5]} intensity={10} />
       <Suspense fallback={null}>
-        <BlackHole progress={progress} />
-        <WarpStreaks progress={progress} />
         <RocketModel progress={progress} />
         <CharacterModel progress={progress} />
       </Suspense>
@@ -247,7 +196,8 @@ export function SpaceJourneyPortfolio() {
 
   useEffect(() => {
     const updateProgress = () => {
-      const scrollable = document.documentElement.scrollHeight - window.innerHeight;
+      const scrollable =
+        document.documentElement.scrollHeight - window.innerHeight;
       setProgress(scrollable > 0 ? clamp01(window.scrollY / scrollable) : 0);
     };
 
@@ -262,19 +212,19 @@ export function SpaceJourneyPortfolio() {
   }, []);
 
   return (
-    <main style={{ height: "200vh", background: "#000" }}>
-      <LoadingScreen />
+    <main style={{ height: "260vh", background: "#000" }}>
       <div
         style={{
           position: "sticky",
           top: 0,
           height: "100vh",
           width: "100%",
+          overflow: "hidden",
         }}
       >
         <Canvas
           shadows
-          camera={{ position: [0, 1.4, 8], fov: 34 }}
+          camera={{ position: [-0.8, 0.3, 0.5], fov: 40 }}
           dpr={[1, 2]}
           gl={{ antialias: true }}
         >
@@ -285,5 +235,5 @@ export function SpaceJourneyPortfolio() {
   );
 }
 
-useGLTF.preload(characterModelUrl);
 useGLTF.preload(rocketModelUrl);
+useGLTF.preload(characterModelUrl);
