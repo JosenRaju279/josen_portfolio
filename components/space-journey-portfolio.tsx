@@ -72,7 +72,7 @@ function CameraRig({ progress }: { progress: number }) {
     const characterPosition = new THREE.Vector3(0, 1.05, 8.1);
 
     // Look forward toward where rocket is heading (+X direction)
-    const startLookAt = new THREE.Vector3(0.2, 0.1, 0);
+    const startLookAt = new THREE.Vector3(0.2, 0.3, 0);
     const rocketLookAt = new THREE.Vector3(2.0, -0.05, 0);
     const characterLookAt = new THREE.Vector3(0, 0.2, 0);
 
