@@ -68,7 +68,7 @@ function CameraRig({ progress }: { progress: number }) {
     // Camera sits BEHIND the rocket (negative X = behind since rocket flies +X)
     // Slightly right and up so we see the rocket body + rings in background
     const startPosition = new THREE.Vector3(-1.6, 0.5, 0.0);
-    const rocketEntryPosition = new THREE.Vector3(-1.2, 0.45, 0);
+    const rocketEntryPosition = new THREE.Vector3(1.7, 0.5, 0);
     const characterPosition = new THREE.Vector3(0, 1.05, 8.1);
 
     // Look forward toward where rocket is heading (+X direction)
@@ -113,7 +113,7 @@ function RocketModel({ progress }: { progress: number }) {
     if (!group) return;
 
     const time = state.clock.getElapsedTime();
-    const exitPhase = smoothStep(0.48, 0.82, progress);
+    const exitPhase = smoothStep(0.58, 0.82, progress);
 
     group.visible = exitPhase < 0.995;
     group.position.set(
