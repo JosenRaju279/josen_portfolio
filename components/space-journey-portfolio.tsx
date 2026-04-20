@@ -10,6 +10,12 @@ const rocketModelUrl = new URL("./models/3Drocket_modal.glb", import.meta.url)
   .href;
 const characterModelUrl = new URL("./models/3Dspace_boi.glb", import.meta.url)
   .href;
+const stagedCharacterModelUrl = "/models/character.glb";
+
+// First clip completes within this scroll segment, then freezes at progress = 1.
+const PRIMARY_SCROLL_RANGE_VH = 200;
+// Additional scroll range used only for the staged second clip.
+const SECONDARY_SCROLL_RANGE_VH = 60;
 
 const ROCKET_START_POSITION: [number, number, number] = [0.0, 0.3, 0];
 const ROCKET_START_ROTATION: [number, number, number] = [
@@ -68,7 +74,7 @@ function CameraRig({ progress }: { progress: number }) {
     // Camera sits BEHIND the rocket (negative X = behind since rocket flies +X)
     // Slightly right and up so we see the rocket body + rings in background
     const startPosition = new THREE.Vector3(-1.6, 0.5, 0.0);
-    const rocketEntryPosition = new THREE.Vector3(1.7, 0.5, 0);
+    const rocketEntryPosition = new THREE.Vector3(1.7, 0.3, 0);
     const characterPosition = new THREE.Vector3(0, 1.05, 8.1);
 
     // Look forward toward where rocket is heading (+X direction)
@@ -173,32 +179,102 @@ function CharacterModel({ progress }: { progress: number }) {
   );
 }
 
-function Scene({ progress }: { progress: number }) {
+function SecondaryCharacterClip({
+  progress,
+  active,
+}: {
+  progress: number;
+  active: boolean;
+}) {
+  const gltf = useGLTF(stagedCharacterModelUrl) as {
+    scene: THREE.Group;
+    animations: THREE.AnimationClip[];
+  };
+  const scene = useMemo(() => fitScene(gltf.scene, 4.8), [gltf.scene]);
+  const groupRef = useRef<THREE.Group>(null);
+  const { actions } = useAnimations(gltf.animations, scene);
+
+  useEffect(() => {
+    Object.values(actions).forEach((action) =>
+      action?.reset().fadeIn(0.3).play(),
+    );
+  }, [actions]);
+
+  useFrame((state) => {
+    const group = groupRef.current;
+    if (!group) return;
+
+    const time = state.clock.getElapsedTime();
+    const entryPhase = smoothStep(0, 1, progress);
+
+    // This second clip starts only after the main scroll range finishes.
+    // It stages a separate character animation without touching the original reveal logic.
+    group.visible = active || entryPhase > 0.001;
+    group.position.set(
+      1.8 - entryPhase * 0.9,
+      -2.2 + entryPhase * 0.95,
+      -0.25 + entryPhase * 0.5,
+    );
+    group.rotation.set(
+      0,
+      -0.65 + entryPhase * 0.28 + Math.sin(time * 0.7) * 0.05,
+      0,
+    );
+    group.scale.setScalar(0.58 + entryPhase * 0.28);
+  });
+
+  return (
+    <group ref={groupRef}>
+      <primitive object={scene} />
+    </group>
+  );
+}
+
+function Scene({
+  primaryProgress,
+  secondaryProgress,
+  secondaryActive,
+}: {
+  primaryProgress: number;
+  secondaryProgress: number;
+  secondaryActive: boolean;
+}) {
   return (
     <>
       <color attach="background" args={["#000000"]} />
       <fog attach="fog" args={["#000000", 10, 22]} />
-      <CameraRig progress={progress} />
+      <CameraRig progress={primaryProgress} />
       <ambientLight intensity={0.9} />
       <directionalLight position={[6, 6, 8]} intensity={1.8} castShadow />
       <pointLight position={[5, 2, 6]} intensity={14} />
       <pointLight position={[-4, 2, 5]} intensity={10} />
       <Suspense fallback={null}>
-        <RocketModel progress={progress} />
-        <CharacterModel progress={progress} />
+        <RocketModel progress={primaryProgress} />
+        <CharacterModel progress={primaryProgress} />
+        <SecondaryCharacterClip
+          progress={secondaryProgress}
+          active={secondaryActive}
+        />
       </Suspense>
     </>
   );
 }
 
 export function SpaceJourneyPortfolio() {
-  const [progress, setProgress] = useState(0);
+  const [primaryProgress, setPrimaryProgress] = useState(0);
+  const [secondaryProgress, setSecondaryProgress] = useState(0);
 
   useEffect(() => {
     const updateProgress = () => {
-      const scrollable =
-        document.documentElement.scrollHeight - window.innerHeight;
-      setProgress(scrollable > 0 ? clamp01(window.scrollY / scrollable) : 0);
+      const viewportHeight = window.innerHeight || 1;
+      const primaryLimit = (PRIMARY_SCROLL_RANGE_VH / 70) * viewportHeight;
+      const secondaryRange = (SECONDARY_SCROLL_RANGE_VH / 100) * viewportHeight;
+      const scrollY = window.scrollY;
+
+      // Main clip is clamped to 0 -> 1 and stays frozen at its final frame after the limit.
+      setPrimaryProgress(clamp01(scrollY / primaryLimit));
+      // Second clip starts only after the first segment has fully completed.
+      setSecondaryProgress(clamp01((scrollY - primaryLimit) / secondaryRange));
     };
 
     updateProgress();
@@ -228,7 +304,11 @@ export function SpaceJourneyPortfolio() {
           dpr={[1, 2]}
           gl={{ antialias: true }}
         >
-          <Scene progress={progress} />
+          <Scene
+            primaryProgress={primaryProgress}
+            secondaryProgress={secondaryProgress}
+            secondaryActive={primaryProgress >= 1}
+          />
         </Canvas>
       </div>
     </main>
@@ -237,3 +317,4 @@ export function SpaceJourneyPortfolio() {
 
 useGLTF.preload(rocketModelUrl);
 useGLTF.preload(characterModelUrl);
+useGLTF.preload(stagedCharacterModelUrl);
