@@ -26,6 +26,7 @@ const ROCKET_START_ROTATION: [number, number, number] = [
 const ROCKET_EXIT_POSITION_OFFSET: [number, number, number] = [2.0, -0.15, 0];
 const ROCKET_EXIT_ROTATION_OFFSET: [number, number, number] = [0, 0.05, 0];
 const ROCKET_IDLE_ROLL = 0.02;
+const CHARACTER_MODEL_ROTATION: [number, number, number] = [0, -2.6, 1];
 
 function clamp01(value: number) {
   return Math.min(1, Math.max(0, value));
@@ -75,12 +76,12 @@ function CameraRig({ progress }: { progress: number }) {
     // Slightly right and up so we see the rocket body + rings in background
     const startPosition = new THREE.Vector3(-1.6, 0.5, 0.0);
     const rocketEntryPosition = new THREE.Vector3(1.7, 0.3, 0);
-    const characterPosition = new THREE.Vector3(0, 1.05, 8.1);
+    const characterPosition = new THREE.Vector3(1, 1.05, 8.1);
 
     // Look forward toward where rocket is heading (+X direction)
     const startLookAt = new THREE.Vector3(0.2, 0.3, 0);
     const rocketLookAt = new THREE.Vector3(2.0, -0.05, 0);
-    const characterLookAt = new THREE.Vector3(0, 0.2, 0);
+    const characterLookAt = new THREE.Vector3(4, 3, -1);
 
     const cameraPosition = startPosition
       .clone()
@@ -164,33 +165,30 @@ function CharacterModel({ progress }: { progress: number }) {
     if (!group) return;
 
     const time = state.clock.getElapsedTime();
-    // ✅ Restored from doc 1: both introPhase + revealPhase with original position logic
     const introPhase = smoothStep(0.08, 0.42, progress);
-    const revealPhase = smoothStep(0.55, 0.92, progress);
+    const revealPhase = smoothStep(0.9, 1.92, progress);
 
     const revealPosition = new THREE.Vector3(
-      2.15,
-      -2.35 + (1 - revealPhase) * 3.4,
-      -0.35,
+      3.6,
+      -3 + (1 - revealPhase) * 3.4,
+      -1.9,
     );
-    const normalViewPosition = new THREE.Vector3(5.85, -1.1, -2.8);
+    const normalViewPosition = new THREE.Vector3(1, -1.1, -2.8);
     const currentPosition = normalViewPosition
       .clone()
       .lerp(revealPosition, introPhase);
 
     group.visible = true;
     group.position.copy(currentPosition);
-    group.rotation.set(
-      0,
-      0.32 + introPhase * -0.52 + Math.sin(time * 0.45) * 0.08,
-      0,
-    );
+    group.rotation.set(0, 1, 0.2);
     group.scale.setScalar(0.82 + introPhase * -0.12 + revealPhase * 0.42);
   });
 
   return (
     <group ref={groupRef}>
-      <primitive object={scene} />
+      <group rotation={CHARACTER_MODEL_ROTATION}>
+        <primitive object={scene} />
+      </group>
     </group>
   );
 }
