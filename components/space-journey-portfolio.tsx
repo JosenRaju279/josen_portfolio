@@ -164,12 +164,28 @@ function CharacterModel({ progress }: { progress: number }) {
     if (!group) return;
 
     const time = state.clock.getElapsedTime();
+    // ✅ Restored from doc 1: both introPhase + revealPhase with original position logic
+    const introPhase = smoothStep(0.08, 0.42, progress);
     const revealPhase = smoothStep(0.55, 0.92, progress);
 
-    group.visible = revealPhase > 0.02;
-    group.position.set(0, -2.6 + (1 - revealPhase) * 3.4, 0);
-    group.rotation.set(0, -0.2 + Math.sin(time * 0.45) * 0.08, 0);
-    group.scale.setScalar(0.7 + revealPhase * 0.42);
+    const revealPosition = new THREE.Vector3(
+      2.15,
+      -2.35 + (1 - revealPhase) * 3.4,
+      -0.35,
+    );
+    const normalViewPosition = new THREE.Vector3(5.85, -1.1, -2.8);
+    const currentPosition = normalViewPosition
+      .clone()
+      .lerp(revealPosition, introPhase);
+
+    group.visible = true;
+    group.position.copy(currentPosition);
+    group.rotation.set(
+      0,
+      0.32 + introPhase * -0.52 + Math.sin(time * 0.45) * 0.08,
+      0,
+    );
+    group.scale.setScalar(0.82 + introPhase * -0.12 + revealPhase * 0.42);
   });
 
   return (
@@ -207,8 +223,6 @@ function SecondaryCharacterClip({
     const time = state.clock.getElapsedTime();
     const entryPhase = smoothStep(0, 1, progress);
 
-    // This second clip starts only after the main scroll range finishes.
-    // It stages a separate character animation without touching the original reveal logic.
     group.visible = active || entryPhase > 0.001;
     group.position.set(
       1.8 - entryPhase * 0.9,
@@ -271,9 +285,7 @@ export function SpaceJourneyPortfolio() {
       const secondaryRange = (SECONDARY_SCROLL_RANGE_VH / 100) * viewportHeight;
       const scrollY = window.scrollY;
 
-      // Main clip is clamped to 0 -> 1 and stays frozen at its final frame after the limit.
       setPrimaryProgress(clamp01(scrollY / primaryLimit));
-      // Second clip starts only after the first segment has fully completed.
       setSecondaryProgress(clamp01((scrollY - primaryLimit) / secondaryRange));
     };
 
