@@ -171,7 +171,7 @@ function CharacterModel({ progress }: { progress: number }) {
     const revealPosition = new THREE.Vector3(
       3.6,
       -3 + (1 - revealPhase) * 3.4,
-      -1.9,
+      -1.1,
     );
     const normalViewPosition = new THREE.Vector3(1, -1.1, -2.8);
     const currentPosition = normalViewPosition
@@ -180,7 +180,7 @@ function CharacterModel({ progress }: { progress: number }) {
 
     group.visible = true;
     group.position.copy(currentPosition);
-    group.rotation.set(0, 1, 0.2);
+    group.rotation.set(0.2, 0, 0.6);
     group.scale.setScalar(0.82 + introPhase * -0.12 + revealPhase * 0.42);
   });
 
